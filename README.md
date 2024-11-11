@@ -60,7 +60,11 @@ permittedNumberOfCallsInHalfOpenState : Configures the number of permitted calls
 After setting the value to tha above prop it verifes again if the failuer rate is high the swith goes to open. if failure rate is low than it goes to closed
 
 **How to register specific MS to Eureka Server**
-In application.prop file of MS add Eureka server URl and in application class add @EnableEurekaClient annotation.
+
+In application.prop file of MS add Eureka server URl
+eureka.client.service-url.defaultZone:"add Eurkea server url"
+
+and in application class add @EnableEurekaClient annotation.
 
 
 
