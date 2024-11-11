@@ -66,6 +66,13 @@ eureka.client.service-url.defaultZone:"add Eurkea server url"
 
 and in application class add @EnableEurekaClient annotation.
 
+**How to config api-agteway in a MS**
+Create one more Project with api-gateway as dependency
+Registery with eurekaclient
+in application.prop --> add below properties
+spring.cloud.gateway.discovery.locatior.enabled=true  --> this prop is reposnsible for ai-gateway to route to specific microservices based on the url
+spring.cloud.gateway.discovery.locatior.lower-case-service-id = true  --> Our MS reigistered with Eureka as lower case but we declared it in respective MS appli.prop as lower case so to match with that we need this prop.
+
 
 
 
