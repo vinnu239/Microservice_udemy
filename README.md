@@ -10,7 +10,7 @@ In Simple terms it act as a mediator for urls where we use id or name which we r
 
 **SpringCloud LoadBalancer** : it will balance the requests, A load balancer distributes user traffic across multiple instances of your applications.
 
-**Spring cloud API Gateway** :It is a lightweight, reactive API gateway built on top of the Spring framework.
+**Spring cloud API Gateway** :It is a lightweight, reactive API gateway built on top of the Spring framework.It will take the responsibility of routing based on the url to Microservices.
 In simple terms it is mediator or entry point of req between consumer and microservices and also it helps to implement the common functionality like authentication and help to log the req and res of all the micro services.
 Internally it use pre and post filters
 pre: req --> authenticate --> to mS
@@ -58,5 +58,10 @@ So after open the circuit we cant hod it open so we can configure some time base
 We have a property to control the calls based on our req this will achiecve by using below prop
 permittedNumberOfCallsInHalfOpenState : Configures the number of permitted calls when the CircuitBreaker is half open.
 After setting the value to tha above prop it verifes again if the failuer rate is high the swith goes to open. if failure rate is low than it goes to closed
+
+**How to register specific MS to Eureka Server**
+In application.prop file of MS add Eureka server URl and in application class add @EnableEurekaClient annotation.
+
+
 
 
