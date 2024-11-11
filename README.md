@@ -108,7 +108,26 @@ in application.prop --> add below properties
 spring.cloud.gateway.discovery.locatior.enabled=true  --> this prop is reposnsible for ai-gateway to route to specific microservices based on the url
 spring.cloud.gateway.discovery.locatior.lower-case-service-id = true  --> Our MS reigistered with Eureka as lower case but we declared it in respective MS appli.prop as lower case so to match with that we need this prop.
 
+**How to inplement sleuth**
+
+add the req dependecy in pom.xml of MS and api-gateway
+Add the below prop in api-gateway application.prop for generating logs and service-id's for MS for each api
+spring.sleuth.reactor.instrumentation-type=decorate-on-each
+after we hit the api we will see the logs as below in the respective terminal
+[api-gateway,3bgtuy567hgfbjnfj,ty657bdghejnv]
+[application-name,traceid,spanid,zipkin-export]
+Where,
+Application-name = Name of the application
+Traceid = each request and response traceid is same when calling same service or one service to another service.
+Spanid = Span Id is printed along with Trace Id. Span Id is different every request and response calling one service to another service.
+Zipkin-export = By default it is false. If it is true, logs will be exported to the Zipkin server.
+
+Trace-id is same for the all MS for the individual api call. But span is different for different MS.
 
 
+**How to start Zipkin server after we inmpleneted sleuth**
+Once we downloaded the zipkin jar file go to that file postition and open cmd prompt and tun java -jar zipkinjarfile --> it will execute
+After downloading we have to include zipkin url in the microservices and api-gateway 
+The sleuth will give the trace-id of individual api call which zipkin will notify it with graphical represnetation
 
 
