@@ -59,6 +59,37 @@ We have a property to control the calls based on our req this will achiecve by u
 permittedNumberOfCallsInHalfOpenState : Configures the number of permitted calls when the CircuitBreaker is half open.
 After setting the value to tha above prop it verifes again if the failuer rate is high the swith goes to open. if failure rate is low than it goes to closed
 
+**How to configure Feignclient**
+After downloading respective packages in the MS where we want to use the feign clinet.
+Create a class for the Feign client inside respective miceroserviece (in our case we created inside Student-service)
+use @feignclinet annotation on top of that class and declare the api-gateway name use ref as below
+
+package com.infybuzz.feignclients;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.infybuzz.response.AddressResponse;
+
+//@FeignClient(value = "address-service",
+//		path = "/api/address")
+//public interface AddressFeignClient {
+//
+//	@GetMapping("/getById/{id}")
+//	public AddressResponse getById(@PathVariable long id);
+
+// the above code is using feign client with eureka server we are calling address method 
+// but to use this class for all the micro service methos commonly and also we need to call the address method
+// thorugh api gateway follow the below code
+
+@FeignClient(value = "api-gateway")
+public interface AddressFeignClient {
+
+	@GetMapping("/address-service/api/address/getById/{id}")
+	public AddressResponse getById(@PathVariable long id);	
+}
+
 **How to register specific MS to Eureka Server**
 
 In application.prop file of MS add Eureka server URl
@@ -72,6 +103,7 @@ Registery with eurekaclient
 in application.prop --> add below properties
 spring.cloud.gateway.discovery.locatior.enabled=true  --> this prop is reposnsible for ai-gateway to route to specific microservices based on the url
 spring.cloud.gateway.discovery.locatior.lower-case-service-id = true  --> Our MS reigistered with Eureka as lower case but we declared it in respective MS appli.prop as lower case so to match with that we need this prop.
+
 
 
 
