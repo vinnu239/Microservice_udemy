@@ -131,3 +131,65 @@ After downloading we have to include zipkin url in the microservices and api-gat
 The sleuth will give the trace-id of individual api call which zipkin will notify it with graphical represnetation
 
 
+**Complete flow of how the feign client will send to soecific service using Eureka with api-gateway by example urls**
+
+Setup
+Eureka Server: Both student-service and address-service register themselves with Eureka.
+API Gateway: The API Gateway is configured to automatically discover services registered with Eureka.
+Example URLs
+API Gateway Base URL: http://api-gateway:9090
+Student Service: http://api-gateway:9090/student-service
+Address Service: http://api-gateway:9090/address-service
+Feign Client in Student Service
+Your Feign client in the Student Service is configured to call the Address Service through the API Gateway:
+
+@FeignClient(value = "api-gateway")
+public interface AddressFeignClient {
+
+    @GetMapping("/address-service/api/address/getById/{id}")
+    public AddressResponse getById(@PathVariable long id);
+}
+Example Flow with URLs
+Student Service Calls Address Service:
+
+Feign Client Call: The Student Service makes a call to the Address Service using the Feign client.
+URL: http://api-gateway:9090/address-service/api/address/getById/{id}
+API Gateway Receives Request:
+
+The API Gateway receives the request at http://api-gateway:9090/address-service/api/address/getById/{id}.
+It recognizes the path /address-service/** and knows it should route this request to the address-service.
+Service Discovery:
+
+The API Gateway uses Eureka to discover the instances of the address-service.
+Eureka provides the details of the available instances (e.g., http://address-service-instance:8081).
+Routing to Address Service:
+
+The API Gateway forwards the request to one of the instances of the address-service.
+Example URL: http://address-service-instance:8081/api/address/getById/{id}
+Address Service Processes Request:
+
+The address-service processes the request and returns the response to the API Gateway.
+The API Gateway then forwards the response back to the Student Service.
+Example Usage in Student Service
+Here's how you might use the AddressFeignClient in your Student Service:
+
+@RestController
+public class StudentController {
+    @Autowired
+    private AddressFeignClient addressFeignClient;
+
+    @GetMapping("/students/{studentId}/address")
+    public AddressResponse getStudentAddress(@PathVariable("studentId") Long studentId) {
+        // Assume we have a method to get the addressId for the student
+        Long addressId = getAddressIdForStudent(studentId);
+        return addressFeignClient.getById(addressId);
+    }
+}
+Summary
+Feign Client: Sends a request to the API Gateway.
+API Gateway: Routes the request to the appropriate microservice based on the path.
+Eureka: Helps the API Gateway discover the actual instances of the microservice.
+Microservice: Processes the request and returns the response.
+This flow ensures that your Student Service can dynamically discover and call the Address Service through the API Gateway, making your microservices architecture more flexible and resilient.
+
+
